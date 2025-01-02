@@ -4,28 +4,22 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateUesTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('ues', function (Blueprint $table) {
             $table->id();
-            $table->string('code'); 
-            $table->string('nom'); 
-            $table->integer('credits_ects'); 
-            $table->tinyInteger('semestre'); 
-            $table->timestamps(); 
+            $table->string('code')->unique();
+            $table->string('nom');
+            $table->integer('credits_ects')->unsigned()->checkBetween(1, 30);
+            $table->integer('semestre')->unsigned()->checkBetween(1, 6);
+            $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('ues');
     }
-};
+}

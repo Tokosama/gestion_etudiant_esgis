@@ -1,7 +1,5 @@
 <?php
 
-// app/Http/Controllers/UEController.php
-
 namespace App\Http\Controllers;
 
 use App\Models\UE;
@@ -9,63 +7,67 @@ use Illuminate\Http\Request;
 
 class UEController extends Controller
 {
-    // Afficher la liste des UEs
     public function index()
     {
-        $ues = UE::all();
+        $ues = UE::with('ecs')->get();
         return view('ues.index', compact('ues'));
     }
 
-    // Afficher le formulaire pour ajouter une UE
     public function create()
     {
         return view('ues.create');
     }
 
-    // Ajouter une nouvelle UE
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|string|max:255',
-            'nom' => 'required|string|max:255',
-            'credits_ects' => 'required|integer',
-            'semestre' => 'required|integer|min:1|max:6',
+            'code' => 'required|unique:ues|max:10|regex:/^UE\d{2}$/',  // Vérifie que le code suit le format "UExx"
+            'nom' => 'required|max:255',
+            'credits_ects' => 'required|integer|between:1,30',
+            'semestre' => 'required|integer|between:1,6',
+        ], [
+            'code.regex' => 'Le code de l\'UE doit être au format "UExx", où "xx" est un nombre à deux chiffres.',
+            'credits_ects.between' => 'Les crédits ECTS doivent être compris entre 1 et 30.',
+            'semestre.between' => 'Le semestre doit être compris entre 1 et 6.',
         ]);
-
+    
+        // Créer l'UE avec les données validées
         UE::create($request->all());
-
-        return redirect()->route('ues.index');
+    
+        return redirect()->route('ues.index')->with('success', 'UE créée avec succès.');
     }
-
-    // Afficher le formulaire pour modifier une UE
+    
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'code' => 'required|max:10|unique:ues,code,' . $id . '|regex:/^UE\d{2}$/',  // Vérifie que le code suit le format "UExx"
+            'nom' => 'required|max:255',
+            'credits_ects' => 'required|integer|between:1,30',
+            'semestre' => 'required|integer|between:1,6',
+        ], [
+            'code.regex' => 'Le code de l\'UE doit être au format "UExx", où "xx" est un nombre à deux chiffres.',
+            'credits_ects.between' => 'Les crédits ECTS doivent être compris entre 1 et 30.',
+            'semestre.between' => 'Le semestre doit être compris entre 1 et 6.',
+        ]);
+    
+        // Mettre à jour l'UE avec les nouvelles données validées
+        $ue = UE::findOrFail($id);
+        $ue->update($request->all());
+    
+        return redirect()->route('ues.index')->with('success', 'UE mise à jour avec succès.');
+    }
+    
     public function edit($id)
     {
         $ue = UE::findOrFail($id);
         return view('ues.edit', compact('ue'));
     }
 
-    // Mettre à jour une UE
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'code' => 'required|string|max:10',
-            'nom' => 'required|string|max:50',
-            'credits_ects' => 'required|integer',
-            'semestre' => 'required|integer|min:1|max:6',
-        ]);
-
-        $ue = UE::findOrFail($id);
-        $ue->update($request->all());
-
-        return redirect()->route('ues.index');
-    }
-
-    // Supprimer une UE
     public function destroy($id)
     {
         $ue = UE::findOrFail($id);
         $ue->delete();
 
-        return redirect()->route('ues.index');
+        return redirect()->route('ues.index')->with('success', 'UE supprimée avec succès.');
     }
 }

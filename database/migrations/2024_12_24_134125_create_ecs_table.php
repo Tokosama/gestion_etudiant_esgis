@@ -4,25 +4,22 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateEcsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up()
-{
-    Schema::create('ecs', function (Blueprint $table) {
-        $table->id(); 
-        $table->string('code'); 
-        $table->string('nom'); 
-        $table->integer('coefficient'); 
-        $table->foreignId('ue_id')->constrained()->onDelete('cascade'); 
-        $table->timestamps(); 
-    });
-}
+    {
+        Schema::create('ecs', function (Blueprint $table) {
+            $table->id();
+            $table->string('code')->unique();
+            $table->string('nom');
+            $table->integer('coefficient')->unsigned()->checkBetween(1, 5);
+            $table->foreignId('ue_id')->constrained('ues')->onDelete('cascade');
+            $table->timestamps();
+        });
+    }
 
-public function down()
-{
-    Schema::dropIfExists('ecs');
+    public function down()
+    {
+        Schema::dropIfExists('ecs');
+    }
 }
-};

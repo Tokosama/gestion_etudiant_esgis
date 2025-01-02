@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Ec extends Model
+class EC extends Model
 {
-
+    protected $table = 'ecs';
     protected $fillable = ['code', 'nom', 'coefficient', 'ue_id'];
 
-    // Relation : Un élément constitutif appartient à une unité d'enseignement (UE)
     public function ue()
     {
-        return $this->belongsTo(Ue::class);
+        return $this->belongsTo(UE::class, 'ue_id');
     }
 }
+
