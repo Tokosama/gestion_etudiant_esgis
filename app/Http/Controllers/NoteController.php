@@ -426,13 +426,13 @@ public function verifierPassageAnneeSuivante($etudiantId, $anneeEtude)
         if ($creditsAcquis >= 60 && $creditsAcquis >= 55) {
             return true; // Passage en L2
         }
-    } elseif ($anneeEtude == 'L3') {
-        if ($creditsAcquis >= 120 && $creditsAcquis >= 110) {
+    } elseif ($anneeEtude == 'L2') {
+        if ($creditsAcquis >= 120 && $creditsAcquis >= 115) {
             return true; // Passage en L3
         }
     }
 
-    return true; // Pas de passage
+    return false; // Pas de passage
 }
 
 }
