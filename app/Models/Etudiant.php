@@ -16,6 +16,7 @@ class Etudiant extends Model
     {
         return $this->hasMany(Note::class, 'etudiant_id');
     }
+
     public function getAnneeEtudeAttribute()
 {
     if ($this->credits_acquis >= 120) {
