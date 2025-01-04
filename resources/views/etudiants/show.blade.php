@@ -6,7 +6,7 @@
 
     <!-- Formulaire pour sélectionner un semestre -->
     <form method="GET" action="{{ route('etudiants.index') }}" class="mb-6 bg-white shadow-lg rounded-lg p-6">
-        <label for="semestre" class="block text-lg font-medium text-gray-700 mb-2">Choisir et filtrer le semestre :</label>
+        <label for="semestre" class="block text-lg font-medium text-gray-700 mb-2">Choisir et filtrer le semestre de l'etudiant que vous voulez voir:</label>
         <div class="flex items-center space-x-4">
             <select name="semestre" id="semestre" class="border border-gray-300 rounded-lg p-3 text-gray-700 focus:ring-blue-500 focus:border-blue-500">
                 @for ($i = 1; $i <= 6; $i++) <!-- Ajustez le nombre de semestres si nécessaire -->
@@ -52,4 +52,6 @@
         </table>
     </div>
 </div>
+<a href="{{ route('etudiants.index')}}" class="mt-4 bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 transition">Retour a la liste d'etudiants</a>
+
 @endsection
