@@ -48,7 +48,16 @@
             {{ $creditsTotaux }} (équivalent au total des crédits de l'année)
         </p>
     
-      
+        <h3 class="text-lg">Crédits manquants pour passer à l'année suivante : 
+            @php
+                $creditsManquants = $creditsTotaux - $creditsAcquis;
+            @endphp
+            @if($creditsManquants > 0)
+                <span class="text-red-500">{{ $creditsManquants }} crédits manquants</span>
+            @else
+                <span class="text-green-500">Aucun crédit manquant, passage assuré</span>
+            @endif
+        </h3>
         <h3 class="text-lg">
             Passage à l'année suivante : 
             @if($creditsTotaux ===$creditsAcquis)
