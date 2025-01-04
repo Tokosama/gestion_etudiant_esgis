@@ -10,9 +10,33 @@ class EtudiantController extends Controller
     public function index()
     {
         $etudiants = Etudiant::all();
-        return view('etudiants.index', compact('etudiants'));
-    }
 
+        return view('etudiants.index', compact('etudiants'));    
+     }      
+    
+ 
+
+        public function show(Request $request)
+        {
+                    // Récupérer le semestre depuis la requête (par défaut, semestre 1)
+          $semestre = $request->input('semestre', 1);
+            
+          // Récupérer les étudiants ayant des notes dans des ECs liés à des UEs du semestre sélectionné
+          $etudiants = Etudiant::whereIn('id', function ($query) use ($semestre) {
+              $query->select('etudiant_id')
+                    ->from('notes')
+                    ->join('ecs', 'notes.ec_id', '=', 'ecs.id')
+                    ->join('ues', 'ecs.ue_id', '=', 'ues.id')
+                    ->where('ues.semestre', $semestre);
+          })->get();
+        
+        
+          // Transmettre les données à la vue
+          return view('etudiants.show', compact('etudiants', 'semestre'));
+        
+        
+        }
+       
     public function create()
     {
         return view('etudiants.create');

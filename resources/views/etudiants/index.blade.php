@@ -22,6 +22,12 @@
                     <td class="border px-4 py-2">{{ $etudiant->nom }}</td>
                     <td class="border px-4 py-2">{{ $etudiant->prenom }}</td>
                     <td class="border px-4 py-2">{{ $etudiant->niveau }}</td>
+                    <td>
+                        <a href="{{ route('etudiant.resultats', $etudiant->id) }}" class="btn btn-primary">
+                            Voir les résultats
+                        </a>
+                    </td>
+
                     <td class="border px-4 py-2">
                         <a href="{{ route('etudiants.edit', $etudiant->id) }}" class="text-blue-500">Modifier</a> |
                         <form action="{{ route('etudiants.destroy', $etudiant->id) }}" method="POST" class="inline">
@@ -33,6 +39,13 @@
                 </tr>
             @endforeach
         </tbody>
+        @foreach($etudiants as $etudiant)
+
+        <a href="{{ route('etudiants.show',$etudiant->id) }}" class="bg-blue-500 text-white px-4 py-2 rounded"> Consultez la page de liste 
+            des etudiants par semestre
+        </a>
+        @endforeach
+
     </table>
 </div>
 @endsection

@@ -227,64 +227,13 @@ public function afficherResultatsGlobauxParSemestre($etudiantId, $semestre)
 
     return view('notes.resultats_semestre', compact('resultatsParSemestre', 'validationSemestre', 'etudiant'));
 }
-// Affichage des résultats globaux de l'étudiant (sans semestres spécifiques)
-public function afficherResultatsGlobaux($etudiantId)
-{
-    // Récupérer l'étudiant
-    $etudiant = Etudiant::findOrFail($etudiantId);
-
-    // Récupérer les notes de l'étudiant avec les ECs et UEs associés
-    $notes = Note::with('ec.ue')
-                 ->where('etudiant_id', $etudiantId)
-                 ->get();
-
-    // Calcul des moyennes et des crédits ECTS
-    $resultats = [];
-    $creditsAcquis = 0;
-
-    foreach ($notes as $note) {
-        $ueId = $note->ec->ue_id;
-        $coefficient = $note->ec->coefficient;
-
-        if (!isset($resultats[$ueId])) {
-            $resultats[$ueId] = [
-                'ue' => $note->ec->ue,
-                'somme_notes' => 0,
-                'somme_coefficients' => 0,
-                'credits_ects' => $note->ec->ue->credits_ects,
-                'notes' => []
-            ];
-        }
-
-        // Calcul des notes et des coefficients
-        $resultats[$ueId]['somme_notes'] += $note->note * $coefficient;
-        $resultats[$ueId]['somme_coefficients'] += $coefficient;
-        $resultats[$ueId]['notes'][] = $note;
-    }
-
-    // Calcul de la moyenne et validation de chaque UE
-    foreach ($resultats as $ueId => &$data) {
-        $moyenneUE = $data['somme_notes'] / $data['somme_coefficients'];
-        $data['moyenne'] = $moyenneUE;
-        $data['valide'] = $moyenneUE >= 10;
-    }
-
-    // Calcul des crédits ECTS
-    foreach ($resultats as $data) {
-        if ($data['valide']) {
-            $creditsAcquis += $data['credits_ects'];
-        }
-    }
-
-    return view('notes.resultats', compact('resultats', 'creditsAcquis', 'etudiant'));
-}
 
 // App\Http\Controllers\NoteController.php
 public function afficherResultatsParAnneeEtudiant($etudiantId)
 {
     $etudiant = Etudiant::findOrFail($etudiantId);
 
-    $anneeEtude = $etudiant->annee_etude;
+    $anneeEtude = $etudiant->niveau;
     $semestresAAfficher = [];
 
     if ($anneeEtude == 'L1') {

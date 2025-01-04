@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 
 class Etudiant extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['numero_etudiant', 'nom', 'prenom', 'niveau'];
 
     public function notes()
@@ -22,4 +26,6 @@ class Etudiant extends Model
         return 'L1'; // Sinon, il est en L1
     }
 }
+
+
 }
