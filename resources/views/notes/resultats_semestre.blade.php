@@ -50,9 +50,7 @@
         @endif
     </h3>
 
-    @if(!$validationSemestre[$semestre]['valide'] && $validationSemestre[$semestre]['valide_par_compensation'])
-        <p class="text-yellow-500">Semestre validé par compensation.</p>
-    @endif
+   
 </div>
 
     @endforeach

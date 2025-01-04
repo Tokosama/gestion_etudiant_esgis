@@ -21,12 +21,12 @@
                     <tr>
                         <td class="py-2 px-4 border-b">{{ $data['ue']->code }} - {{ $data['ue']->nom }}</td>
                         <td class="py-2 px-4 border-b">{{ number_format($data['moyenne'], 2) }}</td>
+
                         <td class="py-2 px-4 border-b">{{ $data['credits_ects'] }}</td>
                         <td class="py-2 px-4 border-b">
                             @if($data['valide'])
                                 <span class="text-green-500">Validée</span>
-                            @elseif($data['valide_par_compensation'])
-                                <span class="text-yellow-500">Validée par compensation</span>
+                            
                             @else
                                 <span class="text-red-500">Non validée</span>
                             @endif
@@ -38,27 +38,16 @@
     @endforeach
 
     <div class="mt-4">
-    <h3 class="text-lg">
-        Passage à l'année suivante : 
-        @if($passeDansAnneeSuivante)
-            <span class="text-green-500">Oui</span>
-        @else
-            <span class="text-red-500">Non</span>
-        @endif
-    </h3>
-    <p>Total des crédits obtenus : {{ $creditsAcquis }}</p>
-    <p>Crédits nécessaires pour passer :
-        @if ($etudiant->annee_etude == 'L1')
-            Minimum 55 crédits et 60 pour validation complète
-        @elseif ($etudiant->annee_etude == 'L2')
-            Minimum 115 crédits et 120 pour validation complète
-        @endif
-    </p>
-
-     <h3 class="text-lg">Crédits manquants pour passer à l'année suivante : 
+        
+        <p>Total des crédits obtenus : {{ $creditsAcquis }}</p>
+        <p>Total des crédits de l'année : {{ $creditsTotaux }}</p>
+        <p>Crédits nécessaires pour passer à l'année supérieure : 
+            {{ $creditsTotaux }} (équivalent au total des crédits de l'année)
+        </p>
+    
+        <h3 class="text-lg">Crédits manquants pour passer à l'année suivante : 
             @php
-                $creditsNecessaires = ($etudiant->annee_etude == 'L1') ? 60 : (($etudiant->annee_etude == 'L2') ? 120 : 180);
-                $creditsManquants = $creditsNecessaires - $creditsAcquis;
+                $creditsManquants = $creditsTotaux - $creditsAcquis;
             @endphp
             @if($creditsManquants > 0)
                 <span class="text-red-500">{{ $creditsManquants }} crédits manquants</span>
@@ -66,6 +55,15 @@
                 <span class="text-green-500">Aucun crédit manquant, passage assuré</span>
             @endif
         </h3>
+        <h3 class="text-lg">
+            Passage à l'année suivante : 
+            @if($creditsTotaux ===$creditsAcquis)
+                <span class="text-green-500">Oui</span>
+            @else
+                <span class="text-red-500">Non</span>
+            @endif
+        </h3>
     </div>
+    
 </div>
 @endsection
