@@ -1,9 +1,10 @@
-<!-- resources/views/notes/index.blade.php -->
 @extends('layouts.app')
 
 @section('content')
 <div class="container mx-auto py-4">
     <h1 class="text-2xl font-bold mb-4">Liste des Notes</h1>
+    <a href="{{ route('notes.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200">Ajouter une Note</a>
+
 
     <!-- Affichage des messages de session -->
     @if(session('error'))
@@ -44,12 +45,18 @@
                     <td class="border px-4 py-2">{{ $note->note }}</td>
                     <td class="border px-4 py-2">{{ $note->session }}</td>
                     <td class="border px-4 py-2">{{ \Carbon\Carbon::parse($note->date_evaluation)->format('d/m/Y') }}</td>
-                    <td class="border px-4 py-2">
-                        @if ($note->note === null)
-                            <span class="text-red-500">Note manquante</span>
-                        @else
-                            {{ $note->note }}
-                        @endif
+                    <td class="border px-4 py-2 flex space-x-4">
+                        <!-- Boutons Modifier et Supprimer -->
+                        <a href="{{ route('notes.edit', $note->id) }}" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-200">
+                            Modifier
+                        </a>
+                        <form action="{{ route('notes.destroy', $note->id) }}" method="POST" class="inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-200" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette note ?')">
+                                Supprimer
+                            </button>
+                        </form>
                     </td>
                 </tr>
             @endforeach

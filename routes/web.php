@@ -7,6 +7,8 @@ use App\Http\Controllers\EtudiantController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ListeEtudiantController;
+use App\Models\Etudiant;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -32,6 +34,9 @@ Route::resource('ues', UEController::class);
 // routes/web.php
     // Afficher le formulaire de création
     Route::get('/notes/create', [NoteController::class, 'create'])->name('notes.create');
+    Route::get('/notes/{id}/edit', [EtudiantController::class, 'edit'])->name('notes.edit');
+    Route::delete('/notes/{id}', [EtudiantController::class, 'destroy'])->name('notes.destroy');
+
 
     // Stocker la note
     Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');

@@ -23,9 +23,8 @@
                         <td class="py-2 px-4 border-b">{{ number_format($data['moyenne'], 2) }}</td>
 
                         <td class="py-2 px-4 border-b">{{ $data['credits_ects'] }}</td>
-<<<<<<< HEAD
                        
-=======
+
                         <td class="py-2 px-4 border-b">
                             @if($data['valide'])
                                 <span class="text-green-500">Validée</span>
@@ -34,7 +33,7 @@
                                 <span class="text-red-500">Non validée</span>
                             @endif
                         </td>
->>>>>>> 56e8b049c7fd70e33f1b8fb431ec871694509172
+
                     </tr>
                 @endforeach
             </tbody>

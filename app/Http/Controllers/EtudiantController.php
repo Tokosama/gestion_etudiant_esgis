@@ -8,12 +8,10 @@ use Illuminate\Http\Request;
 class EtudiantController extends Controller
 {
     public function index()
-    {
-        $etudiants = Etudiant::all();
-
-        return view('etudiants.index', compact('etudiants'));    
-     }      
-    
+{
+    $etudiants = Etudiant::paginate(10); // 10 étudiants par page
+    return view('etudiants.index', compact('etudiants'));
+}
  
 
         public function show(Request $request)

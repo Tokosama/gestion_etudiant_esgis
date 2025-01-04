@@ -61,7 +61,7 @@ private function getSemestresForAnnee($niveau)
 
 
 
-    public function store(Request $request)
+public function store(Request $request)
 {
     $validatedData = $request->validate([
         'ec_id' => 'required|exists:ecs,id',
@@ -71,51 +71,45 @@ private function getSemestresForAnnee($niveau)
         'date_evaluation' => 'required|date',
     ]);
 
-    // Vérification si une note existe déjà pour l'étudiant et la session
+    // Vérifier si une note existe déjà pour l'étudiant et cet EC
     $existingNote = Note::where('etudiant_id', $validatedData['etudiant_id'])
                         ->where('ec_id', $validatedData['ec_id'])
-                        ->where('session', $validatedData['session'])
                         ->first();
 
-    if ($existingNote) {
-        // Si une note existe déjà, afficher un message d'erreur
-        return redirect()->route('notes.index')->with('error', 'Une note a déjà été enregistrée pour cette session.');
-    }
-
-    // Vérification de la session et mise à jour de la note si nécessaire
     if ($validatedData['session'] === 'rattrapage') {
-        // Vérifier s'il existe une note de session normale pour cet étudiant et cet EC
-        $noteNormale = Note::where('etudiant_id', $validatedData['etudiant_id'])
-                           ->where('ec_id', $validatedData['ec_id'])
-                           ->where('session', 'normale')
-                           ->first();
-    
-        // Si une note normale existe, aucune mise à jour de cette note n'est effectuée, mais on enregistre une note de rattrapage séparée
-        // Si aucune note normale n'existe, une nouvelle note de rattrapage est ajoutée
-        Note::create([
-            'ec_id' => $validatedData['ec_id'],
-            'etudiant_id' => $validatedData['etudiant_id'],
-            'note' => $validatedData['note'],
-            'session' => 'rattrapage',
-            'date_evaluation' => $validatedData['date_evaluation'],
-        ]);
-    
-        return redirect()->route('notes.index')->with('success', 'Note de rattrapage ajoutée avec succès.');
+        if ($existingNote) {
+            // Si une note normale existe et la nouvelle note est meilleure
+            if ($existingNote->session === 'normale' && $validatedData['note'] > $existingNote->note) {
+                // Remplacer la note normale par la nouvelle note de rattrapage
+                $existingNote->update([
+                    'note' => $validatedData['note'],
+                    'session' => 'rattrapage',
+                    'date_evaluation' => $validatedData['date_evaluation'],
+                ]);
+            } else if ($existingNote->session === 'rattrapage' && $validatedData['note'] > $existingNote->note) {
+                // Mettre à jour si c'est une meilleure note de rattrapage
+                $existingNote->update([
+                    'note' => $validatedData['note'],
+                    'date_evaluation' => $validatedData['date_evaluation'],
+                ]);
+            }
+        } else {
+            // Créer une nouvelle note de rattrapage si aucune note n'existe
+            Note::create($validatedData);
+        }
     } else {
-        // Enregistrer une note de session normale si la session est normale
-        Note::create([
-            'ec_id' => $validatedData['ec_id'],
-            'etudiant_id' => $validatedData['etudiant_id'],
-            'note' => $validatedData['note'],
-            'session' => 'normale',
-            'date_evaluation' => $validatedData['date_evaluation'],
-        ]);
-    
-        return redirect()->route('notes.index')->with('success', 'Note de session normale ajoutée avec succès.');
+        // Pour la session normale
+        if (!$existingNote) {
+            // Créer une nouvelle note si aucune note n'existe
+            Note::create($validatedData);
+        } else {
+            // Si une note existe déjà, ne pas permettre une autre note normale
+            return redirect()->route('notes.index')->with('error', 'Une note de session normale existe déjà.');
+        }
     }
-    
-}
 
+    return redirect()->route('notes.index')->with('success', 'Note enregistrée avec succès.');
+}
     
     
     

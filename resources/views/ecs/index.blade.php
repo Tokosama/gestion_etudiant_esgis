@@ -3,7 +3,7 @@
 @section('content')
 <div class="container mx-auto py-4">
     <h1 class="text-2xl font-bold mb-4">Liste des ECs</h1>
-    <a href="{{ route('ecs.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">Ajouter un EC</a>
+    <a href="{{ route('ecs.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200">Ajouter un EC</a>
 
     <table class="w-full mt-4 border border-gray-200">
         <thead>
@@ -22,12 +22,12 @@
                     <td class="border px-4 py-2">{{ $ec->nom }}</td>
                     <td class="border px-4 py-2">{{ $ec->coefficient }}</td>
                     <td class="border px-4 py-2">{{ $ec->ue->nom }}</td>
-                    <td class="border px-4 py-2">
-                        <a href="{{ route('ecs.edit', $ec->id) }}" class="text-blue-500">Modifier</a> |
+                    <td class="border px-4 py-2 flex space-x-2">
+                        <a href="{{ route('ecs.edit', $ec->id) }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200">Modifier</a>
                         <form action="{{ route('ecs.destroy', $ec->id) }}" method="POST" class="inline">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="text-red-500" onclick="return confirm('Êtes-vous sûr ?')">Supprimer</button>
+                            <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-200" onclick="return confirm('Êtes-vous sûr ?')">Supprimer</button>
                         </form>
                     </td>
                 </tr>
