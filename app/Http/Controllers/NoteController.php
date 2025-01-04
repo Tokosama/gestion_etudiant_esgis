@@ -387,13 +387,7 @@ public function afficherResultatsParAnneeEtudiant($etudiantId)
     foreach ($semestresAAfficher as $semestre) {
         $resultatsParSemestre[$semestre] = $this->obtenirResultatsPourSemestre($etudiantId, $semestre);
 
-        foreach ($resultatsParSemestre[$semestre] as $data) {
-            $creditsTotaux += $data['credits_ects']; // Ajout des crédits ECTS de chaque UE
-            if ($data['valide']) {
-                $creditsAcquis += $data['credits_ects'];
-            }
-        }
-    }
+       
 
     $passeDansAnneeSuivante = $this->verifierPassageAnneeSuivante($etudiantId, $anneeEtude);
 
