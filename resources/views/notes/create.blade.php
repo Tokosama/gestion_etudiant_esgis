@@ -55,8 +55,16 @@
     <!-- Sélection de la date d'évaluation -->
     <div class="mb-4">
         <label for="date_evaluation" class="block text-sm font-medium text-gray-700">Date d'Évaluation</label>
-        <input type="date" name="date_evaluation" id="date_evaluation" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" required>
+        <input 
+            type="date" 
+            name="date_evaluation" 
+            id="date_evaluation" 
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md" 
+            required
+            min="2020-01-01" 
+            max="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
     </div>
+    
 
     <!-- Bouton de soumission -->
     <button type="submit" class="bg-blue-500 text-white p-2 rounded-md">Enregistrer</button>

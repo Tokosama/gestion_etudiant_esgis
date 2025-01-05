@@ -31,7 +31,6 @@ class UEController extends Controller
             'semestre.between' => 'Le semestre doit être compris entre 1 et 6.',
         ]);
     
-        // Créer l'UE avec les données validées
         UE::create($request->all());
     
         return redirect()->route('ues.index')->with('success', 'UE créée avec succès.');

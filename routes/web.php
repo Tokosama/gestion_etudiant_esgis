@@ -51,3 +51,4 @@ Route::resource('ues', UEController::class);
 
 
 
+Route::resource('ecs', ECController::class);

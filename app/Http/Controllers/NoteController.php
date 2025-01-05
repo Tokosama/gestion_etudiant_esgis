@@ -11,9 +11,7 @@ use App\Models\Etudiant;
 
 class NoteController extends Controller
 {
-    // NoteController.php
-
-    // NoteController.php
+ 
 public function index()
 {
     // Récupérer toutes les notes avec leurs relations (ECs et UEs associées)
@@ -24,8 +22,8 @@ public function index()
 }
 public function create(Request $request)
 {
-    $etudiants = Etudiant::all(); // Tous les étudiants
-    $ecs = collect(); // Par défaut, une collection vide
+    $etudiants = Etudiant::all(); 
+    $ecs = collect(); 
 
     if ($request->has('etudiant_id')) {
         $etudiantId = $request->input('etudiant_id');
@@ -48,7 +46,7 @@ public function create(Request $request)
     return view('notes.create', compact('etudiants', 'ecs'));
 }
 
-// Méthode utilitaire pour déterminer les semestres selon l'année
+// déterminer les semestres selon l'année
 private function getSemestresForAnnee($niveau)
 {
     return match ($niveau) {
@@ -78,7 +76,7 @@ private function getSemestresForAnnee($niveau)
                         ->first();
 
     if ($existingNote) {
-        // Si une note existe déjà, afficher un message d'erreur
+        // Si une note existe déjà,on  affiche un message d'erreur
         return redirect()->route('notes.index')->with('error', 'Une note a déjà été enregistrée pour cette session.');
     }
 
@@ -116,21 +114,7 @@ private function getSemestresForAnnee($niveau)
     
 }
 
-    
-    
-    
 
-
-
-
-
-
-
-
-
-
-
-// NoteController.php
 
 public function afficherResultatsGlobauxParSemestre($etudiantId, $semestre)
 {
@@ -211,7 +195,7 @@ public function afficherResultatsGlobauxParSemestre($etudiantId, $semestre)
     foreach ($resultatsParSemestre as $semestre => &$ues) {
         $creditsValides = 0;
         $creditsTotal = 0;
-        $compensationPossible = false; // Reset compensation flag
+        $compensationPossible = false;
 
         foreach ($ues as &$data) {
             $data['moyenne'] = $data['somme_notes'] / $data['somme_coefficients'];
@@ -241,69 +225,8 @@ public function afficherResultatsGlobauxParSemestre($etudiantId, $semestre)
 }
 
 
-
-
-
-
-
-
-
-// Affichage des résultats globaux de l'étudiant (sans semestres spécifiques)
-public function afficherResultatsGlobaux($etudiantId)
-{
-    // Récupérer l'étudiant
-    $etudiant = Etudiant::findOrFail($etudiantId);
-
-    // Récupérer les notes de l'étudiant avec les ECs et UEs associés
-    $notes = Note::with('ec.ue')
-                 ->where('etudiant_id', $etudiantId)
-                 ->get();
-
-    // Calcul des moyennes et des crédits ECTS
-    $resultats = [];
-    $creditsAcquis = 0;
-
-    foreach ($notes as $note) {
-        $ueId = $note->ec->ue_id;
-        $coefficient = $note->ec->coefficient;
-
-        if (!isset($resultats[$ueId])) {
-            $resultats[$ueId] = [
-                'ue' => $note->ec->ue,
-                'somme_notes' => 0,
-                'somme_coefficients' => 0,
-                'credits_ects' => $note->ec->ue->credits_ects,
-                'notes' => []
-            ];
-        }
-
-        // Calcul des notes et des coefficients
-        $resultats[$ueId]['somme_notes'] += $note->note * $coefficient;
-        $resultats[$ueId]['somme_coefficients'] += $coefficient;
-        $resultats[$ueId]['notes'][] = $note;
-    }
-
-    // Calcul de la moyenne et validation de chaque UE
-    foreach ($resultats as $ueId => &$data) {
-        $moyenneUE = $data['somme_notes'] / $data['somme_coefficients'];
-        $data['moyenne'] = $moyenneUE;
-        $data['valide'] = $moyenneUE >= 10;
-    }
-
-    // Calcul des crédits ECTS
-    foreach ($resultats as $data) {
-        if ($data['valide']) {
-            $creditsAcquis += $data['credits_ects'];
-        }
-    }
-
-    return view('notes.resultats', compact('resultats', 'creditsAcquis', 'etudiant'));
-}
-
-// App\Http\Controllers\NoteController.php
 public function obtenirResultatsPourSemestre($etudiantId, $semestre)
-{
-    // Récupérer tous les UEs du semestre
+    {
     $ues = UE::where('semestre', $semestre)->get();
 
     // Récupérer les notes de l'étudiant pour ce semestre
@@ -401,7 +324,7 @@ public function afficherResultatsParAnneeEtudiant($etudiantId)
         }
     }
 
-    $passeDansAnneeSuivante = $this->verifierPassageAnneeSuivante($etudiantId, $anneeEtude);
+    $passeDansAnneeSuivante = $creditsAcquis === $creditsTotaux;
 
     return view('notes.resultats_par_annee', compact(
         'resultatsParSemestre', 
@@ -414,32 +337,6 @@ public function afficherResultatsParAnneeEtudiant($etudiantId)
 
 
 
-public function verifierPassageAnneeSuivante($etudiantId, $anneeEtude)
-{
-    $creditsAcquis = 0;
-
-    // Récupérer les résultats de l'étudiant
-    $notes = Note::where('etudiant_id', $etudiantId)->get();
-
-    foreach ($notes as $note) {
-        if ($note->note >= 10) { // Validation des UEs avec moyenne >= 10
-            $creditsAcquis += $note->ec->ue->credits_ects;
-        }
-    }
-
-    // Vérifier les conditions de passage
-    if ($anneeEtude == 'L1') {
-        if ($creditsAcquis >= 60 && $creditsAcquis >= 55) {
-            return true; // Passage en L2
-        }
-    } elseif ($anneeEtude == 'L2') {
-        if ($creditsAcquis >= 120 && $creditsAcquis >= 115) {
-            return true; // Passage en L3
-        }
-    }
-
-    return false; // Pas de passage
-}
 
 }
 
