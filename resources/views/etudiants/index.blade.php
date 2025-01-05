@@ -16,7 +16,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($etudiants as $etudiant)
+            @forelse($etudiants as $etudiant)
                 <tr>
                     <td class="border px-4 py-2">{{ $etudiant->numero_etudiant }}</td>
                     <td class="border px-4 py-2">{{ $etudiant->nom }}</td>
@@ -36,7 +36,11 @@
                         </form>
                     </td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="5" class="text-center text-gray-500 py-4">Aucun étudiant trouvé.</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
 
@@ -46,12 +50,12 @@
 
     <div class="mt-6">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-        
-                    <a href="{{ route('etudiants.show', $etudiant->id) }}" 
-                       class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded block text-center">
-                        Consultez la page pour voir les resultats par semestre
-                    </a>
-                </div>
+            @if ($etudiants->count() > 0)
+                <a href="{{ route('etudiants.show', $etudiant->id) }}" 
+                   class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded block text-center">
+                    Consultez la page pour voir les résultats par semestre
+                </a>
+            @endif
         </div>
     </div>
 </div>
