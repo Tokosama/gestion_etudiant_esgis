@@ -46,17 +46,12 @@
 
     <div class="mt-6">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-            @foreach($etudiants as $etudiant)
-                <div class="bg-white shadow-md rounded-lg p-4 border border-gray-200">
-                    <h2 class="text-lg font-bold text-gray-800 mb-2">{{ $etudiant->nom }} {{ $etudiant->prenom }}</h2>
-                    <p class="text-gray-600">Numéro Étudiant : <span class="font-medium">{{ $etudiant->numero_etudiant }}</span></p>
-                    <p class="text-gray-600 mb-4">Niveau : <span class="font-medium">{{ $etudiant->niveau }}</span></p>
+        
                     <a href="{{ route('etudiants.show', $etudiant->id) }}" 
                        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded block text-center">
-                        Consultez la page par semestre
+                        Consultez la page pour voir les resultats par semestre
                     </a>
                 </div>
-            @endforeach
         </div>
     </div>
 </div>
