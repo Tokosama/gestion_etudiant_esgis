@@ -26,6 +26,8 @@ class UEController extends Controller
             'credits_ects' => 'required|integer|between:1,30',
             'semestre' => 'required|integer|between:1,6',
         ], [
+
+    'code.unique' => 'Ce code UE existe déjà .', 
             'code.regex' => 'Le code de l\'UE doit être au format "UExx", où "xx" est un nombre à deux chiffres.',
             'credits_ects.between' => 'Les crédits ECTS doivent être compris entre 1 et 30.',
             'semestre.between' => 'Le semestre doit être compris entre 1 et 6.',
@@ -44,6 +46,8 @@ class UEController extends Controller
             'credits_ects' => 'required|integer|between:1,30',
             'semestre' => 'required|integer|between:1,6',
         ], [
+    'code.unique' => 'Ce code UE existe déjà .', 
+
             'code.regex' => 'Le code de l\'UE doit être au format "UExx", où "xx" est un nombre à deux chiffres.',
             'credits_ects.between' => 'Les crédits ECTS doivent être compris entre 1 et 30.',
             'semestre.between' => 'Le semestre doit être compris entre 1 et 6.',

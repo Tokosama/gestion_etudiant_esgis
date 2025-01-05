@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <h1 class="text-2xl font-semibold mb-6">Résultats de l'étudiant : {{ $etudiant->nom }} {{ $etudiant->prenom }} ({{ $etudiant->annee_etude }})</h1>
+    <h1 class="text-2xl font-semibold mb-6">Résultats de l'étudiant : {{ $etudiant->nom }} {{ $etudiant->prenom }} {{$etudiant->niveau}}</h1>
 
     @foreach($resultatsParSemestre as $semestre => $ues)
         <h2 class="text-xl mb-4">Semestre {{ $semestre }}</h2>
@@ -23,6 +23,8 @@
                         <td class="py-2 px-4 border-b">{{ number_format($data['moyenne'], 2) }}</td>
 
                         <td class="py-2 px-4 border-b">{{ $data['credits_ects'] }}</td>
+                       
+
                         <td class="py-2 px-4 border-b">
                             @if($data['valide'])
                                 <span class="text-green-500">Validée</span>
@@ -31,6 +33,7 @@
                                 <span class="text-red-500">Non validée</span>
                             @endif
                         </td>
+
                     </tr>
                 @endforeach
             </tbody>
@@ -49,7 +52,7 @@
             @php
                 $creditsManquants = $creditsTotaux - $creditsAcquis;
             @endphp
-            @if($creditsManquants > 0)
+            @if(!$passeDansAnneeSuivante)
                 <span class="text-red-500">{{ $creditsManquants }} crédits manquants</span>
             @else
                 <span class="text-green-500">Aucun crédit manquant, passage assuré</span>
@@ -57,7 +60,7 @@
         </h3>
         <h3 class="text-lg">
             Passage à l'année suivante : 
-            @if($creditsTotaux ===$creditsAcquis)
+            @if($passeDansAnneeSuivante)
                 <span class="text-green-500">Oui</span>
             @else
                 <span class="text-red-500">Non</span>
@@ -66,4 +69,5 @@
     </div>
     
 </div>
+
 @endsection

@@ -114,7 +114,45 @@ private function getSemestresForAnnee($niveau)
     
 }
 
+//MIS  A JOUR ET SUPRESSSIONNN 
 
+public function edit($id)
+{
+    $note = Note::findOrFail($id);
+    $etudiants = Etudiant::all();
+    $ecs = EC::all();
+
+    return view('notes.edit', compact('note', 'etudiants', 'ecs'));
+}
+
+public function update(Request $request, $id)
+{
+    $validatedData = $request->validate([
+        'ec_id' => 'required|exists:ecs,id',
+        'etudiant_id' => 'required|exists:etudiants,id',
+        'note' => 'required|numeric|min:0|max:20',
+        'session' => 'required|in:normale,rattrapage',
+        'date_evaluation' => 'required|date',
+    ]);
+
+    $note = Note::findOrFail($id);
+    $note->update($validatedData);
+
+    return redirect()->route('notes.index')->with('success', 'Note mise à jour avec succès.');
+}
+
+public function destroy($id)
+{
+    $note = Note::findOrFail($id);
+    $note->delete();
+
+    return redirect()->route('notes.index')->with('success', 'Note supprimée avec succès.');
+}
+
+
+
+
+// RESULTATTTS
 
 public function afficherResultatsGlobauxParSemestre($etudiantId, $semestre)
 {
@@ -324,7 +362,7 @@ public function afficherResultatsParAnneeEtudiant($etudiantId)
         }
     }
 
-    $passeDansAnneeSuivante = $creditsAcquis === $creditsTotaux;
+    $passeDansAnneeSuivante = $creditsAcquis === $creditsTotaux && $creditsTotaux !== 0;
 
     return view('notes.resultats_par_annee', compact(
         'resultatsParSemestre', 
@@ -339,4 +377,3 @@ public function afficherResultatsParAnneeEtudiant($etudiantId)
 
 
 }
-

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class UE extends Model
 {
     use HasFactory;
@@ -15,6 +16,9 @@ class UE extends Model
     {
         return $this->hasMany(EC::class, 'ue_id');
     }
-
+    public function etudiants()
+    {
+        return $this->belongsToMany(Etudiant::class, 'etudiant_ue'); // Table pivot entre UE et Etudiant
+    }
     
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class EC extends Model
 {    use HasFactory;
     protected $table = 'ecs';
@@ -14,5 +15,6 @@ class EC extends Model
     {
         return $this->belongsTo(UE::class, 'ue_id');
     }
+    
 }
 
